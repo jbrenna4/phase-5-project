@@ -25,26 +25,25 @@ api = Api(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-class User(db.Model, SerializerMixin):
-    __tablename__ = 'users'
+class Customer(db.Model, SerializerMixin):
+    __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
-    bio = db.Column(db.String, default='')
-    img = db.Column(db.String, default='https://steamuserimages-a.akamaihd.net/ugc/885384897182110030/F095539864AC9E94AE5236E04C8CA7C2725BCEFF/')
     name = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    user_games = db.relationship('UserGame', backref='user')
+    reservations = db.relationship('Reservation', backref='customer')
 
-    serialize_rules = ('-user_games.user',)
+    serialize_rules = ('-reservations.customer', '-shops.customers')
+
 
     @validates('name')
     def validate_name(self, key, value):
         if len(value) < 1 or len(value) > 20:
-            raise ValueError('Please enter a Username between 1-20 characters')
+            raise ValueError('Please enter a Name between 1-20 characters')
         return value
 
     @validates('email')
@@ -62,94 +61,89 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<user name:{self.name}, email:{self.email}>'
 
-class Game(db.Model, SerializerMixin):
-    __tablename__ = 'games'
+class Shop(db.Model, SerializerMixin):
+    __tablename__ = 'shops'
 
     id = db.Column(db.Integer, primary_key=True)
     img = db.Column(db.String)
-    price = db.Column(db.Float)
-    genre = db.Column(db.String)
-    title = db.Column(db.String)
-    studio = db.Column(db.String)
-    description = db.Column(db.String)
+    neighborhood = db.Column(db.String)
+    address = db.Column(db.Varchar)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    game_reviews = db.relationship('Review', backref='game')
+    reservations = db.relationship('Reservation', backref='shop')
+    workers = db.relationship('Worker', backref='shop')
 
-    serialize_rules = ('-game_reviews.game',)
+    serialize_rules = ('-reservations.shop', '-customers.shops')
 
     @validates('img')
     def validate_img(self, key, value):
         if len(value) < 0:
             raise ValueError('Please enter an Image')
         return value
-
-    @validates('price')
-    def validate_price(self, key, value):
+    
+    @validates('neighborhood')
+    def validate_img(self, key, value):
+        if len(value) < 0:
+            raise ValueError('Please enter a valid neighborhood')
+        return value
+    
+    @validates('address')
+    def validate_location(self, key, value):
         if value < 0:
-            raise ValueError('Please enter a valid Price')
-        return value
-
-    @validates('genre')
-    def validate_genre(self, key, value):
-        if len(value) < 0:
-            raise ValueError('Please enter a Genre')
-        return value
-
-    @validates('title')
-    def validate_title(self, key, value):
-        if len(value) < 0:
-            raise ValueError('Please enter a Title')
-        return value
-
-    @validates('studio')
-    def validate_title(self, key, value):
-        if len(value) < 0:
-            raise ValueError('Please enter a Studio')
-        return value
-
-    @validates('description')
-    def validate_description(self, key, value):
-        if len(value) < 20:
-            raise ValueError('Please enter a Description with at least 20 characters')
+            raise ValueError('Please enter a valid address')
         return value
     
     def __repr__(self):
-        return f'<game title:{self.title}, price:{self.price}, genre: {self.genre}, description: {self.description}>'
+        return f'<shop location:{self.neighborhood}, address:{self.address}>'
 
-class Review(db.Model, SerializerMixin):
-    __tablename__ = 'reviews'
+class Worker(db.Model, SerializerMixin):
+    __tablename__ = 'workers'
 
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer)
-    description = db.Column(db.String)
+    name = db.Column(db.Integer)
+    role = db.Column(db.String)
+    day_rate = db.Column(db.Integer)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    shop_id = db.Column(db.Integer)
 
-    @validates('rating')
-    def validate_rating(self, key, value):
-        if value < 1 or value > 10:
-            raise ValueError('Rating must be 1-10')
+    @validates('name')
+    def validate_name(self, key, value):
+        if len(value) < 1 or len(value) > 20:
+            raise ValueError('Please enter a Name between 1-20 characters')
         return value
 
-    @validates('description')
+    @validates('role')
     def validate_description(self, key, value):
-        if len(value) < 0:
-            raise ValueError('Please enter a Review')
+        if value != "santa" and value != "elf":
+            raise ValueError('role must be either santa or elf')
+        return value
+    
+    @validates('day_rate')
+    def validate_day_rate(self, key, value):
+        if value < 0:
+            raise ValueError('day_rate must be greater than zero')
         return value
 
-class UserGame(db.Model, SerializerMixin):
-    __tablename__ = 'user_games'
+    def __repr__(self):
+        return f'<worker name:{self.name}, role:{self.role} day rate:{self.day_rate}>'
+
+# this is my join table
+class Reservation(db.Model, SerializerMixin):
+    __tablename__ = 'reservations'
 
     id = db.Column(db.Integer, primary_key=True)
-    last_played = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    hours_played = db.Column(db.Integer, default='0')
+    scheduled_time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
-    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+
+    serialize_rules =('-shop.customers', '-customer.shops', '-customer.reservations', '-shop.reservations')
+
+
+    def __repr__(self):
+        return f'<shop location:{self.shop_id}, customer:{self.customer_id}, time:{self.scheduled_time}>'
