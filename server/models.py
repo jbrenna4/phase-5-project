@@ -32,6 +32,7 @@ class Customer(db.Model, SerializerMixin):
     name = db.Column(db.String)
     email = db.Column(db.String)
     password = db.Column(db.String)
+    phone_number = db.Column(db.Integer)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
@@ -102,6 +103,7 @@ class Worker(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Integer)
+    phone_number = db.Column(db.Integer)
     role = db.Column(db.String)
     day_rate = db.Column(db.Integer)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
@@ -143,6 +145,18 @@ class Reservation(db.Model, SerializerMixin):
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
     serialize_rules =('-shop.customers', '-customer.shops', '-customer.reservations', '-shop.reservations')
+
+    @validates('scheduled_time')
+    def validate_scheduled_time(self, key, scheduled_time):
+        if scheduled_time is not None:
+            if scheduled_time.time() < datetime.strptime('09:00', '%H:%M').time() or \
+                    scheduled_time.time() > datetime.strptime('19:00', '%H:%M').time():
+                raise ValueError('Scheduled time should be between 9 AM and 7 PM')
+        return scheduled_time
+
+    __table_args__ = (
+        db.CheckConstraint("scheduled_time IS NULL OR (scheduled_time::time >= '09:00:00'::time AND scheduled_time::time <= '19:00:00'::time)", name="check_valid_scheduled_time"),
+    )
 
 
     def __repr__(self):
