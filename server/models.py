@@ -68,7 +68,7 @@ class Shop(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     img = db.Column(db.String)
     neighborhood = db.Column(db.String)
-    address = db.Column(db.Varchar)
+    address = db.Column(db.String)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
@@ -89,11 +89,6 @@ class Shop(db.Model, SerializerMixin):
             raise ValueError('Please enter a valid neighborhood')
         return value
     
-    @validates('address')
-    def validate_location(self, key, value):
-        if value < 0:
-            raise ValueError('Please enter a valid address')
-        return value
     
     def __repr__(self):
         return f'<shop location:{self.neighborhood}, address:{self.address}>'
@@ -109,7 +104,7 @@ class Worker(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    shop_id = db.Column(db.Integer)
+    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
 
     @validates('name')
     def validate_name(self, key, value):
@@ -138,6 +133,7 @@ class Reservation(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     scheduled_time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    end_time = db.Column(db.DateTime, default=datetime.datetime.utcnow() + datetime.timedelta(minutes=30))
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
@@ -146,17 +142,16 @@ class Reservation(db.Model, SerializerMixin):
 
     serialize_rules =('-shop.customers', '-customer.shops', '-customer.reservations', '-shop.reservations')
 
-    @validates('scheduled_time')
-    def validate_scheduled_time(self, key, scheduled_time):
-        if scheduled_time is not None:
-            if scheduled_time.time() < datetime.strptime('09:00', '%H:%M').time() or \
-                    scheduled_time.time() > datetime.strptime('19:00', '%H:%M').time():
-                raise ValueError('Scheduled time should be between 9 AM and 7 PM')
-        return scheduled_time
+    # @validates('scheduled_time')
+    # def validate_scheduled_time(self, key, scheduled_time):
+    #     if scheduled_time is not None:
+    #         if scheduled_time.time() < datetime.strptime('09:00', '%H:%M').time() or scheduled_time.time() > datetime.strptime('19:00', '%H:%M').time():
+    #             raise ValueError('Scheduled time should be between 9 AM and 7 PM')
+    #     return scheduled_time
 
-    __table_args__ = (
-        db.CheckConstraint("scheduled_time IS NULL OR (scheduled_time::time >= '09:00:00'::time AND scheduled_time::time <= '19:00:00'::time)", name="check_valid_scheduled_time"),
-    )
+    # __table_args__ = (
+    #     db.CheckConstraint("scheduled_time IS NULL OR (scheduled_time::time >= '09:00:00'::time AND scheduled_time::time <= '19:00:00'::time)", name="check_valid_scheduled_time"),
+    # )
 
 
     def __repr__(self):
