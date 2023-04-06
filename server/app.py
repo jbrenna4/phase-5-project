@@ -5,7 +5,8 @@ from flask_restful import Api, Resource
 from werkzeug.exceptions import NotFound, Unauthorized
 from flask_cors import CORS
 
-from models import db, Customer, Worker, Shop, Reservation
+
+from models import db, User, Worker, Shop, Reservation
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -19,78 +20,78 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 #/users
-class Customers(Resource):
+class Users(Resource):
     #GET
     def get(self):
-        return make_response([customer.to_dict(rules=('-reservations',)) for customer in Customer.query.all()], 200)
+        return make_response([user.to_dict(rules=('-reservations',)) for user in User.query.all()], 200)
     
     #POST
     def post(self):
         try:
             r_json = request.get_json()
-            new_customer = Customer(
+            new_user = User(
                 name = r_json['name'],
                 email = r_json['email'],
                 password = r_json['password']
             )
 
-            db.session.add(new_customer)
+            db.session.add(new_user)
             db.session.commit()
-            session['customer_id'] = new_customer.id
+            session['user_id'] = new_user.id
 
-            return make_response(jsonify(new_customer.to_dict()), 201)
+            return make_response(jsonify(new_user.to_dict()), 201)
         
         except ValueError as e:
             return make_response({'error': e.__str__()}, 400)
 
-api.add_resource(Customers, '/customers')
+api.add_resource(Users, '/users')
 
 #/users/:id
-class CustomerById(Resource):
+class UserById(Resource):
     #GET
     def get(self, id):
-        customer = Customer.query.filter_by(id = id).first()
+        user = User.query.filter_by(id = id).first()
 
-        if not customer:
-            return make_response({'error': 'Customer Not Found!'}, 404)
+        if not user:
+            return make_response({'error': 'User Not Found!'}, 404)
 
-        return make_response(customer.to_dict(), 200)
+        return make_response(user.to_dict(), 200)
 
     #PATCH
     def patch(self, id):
-        customer = Customer.query.filter_by(id= id).first()
+        user = User.query.filter_by(id= id).first()
 
-        if not customer:
-            return make_response({'error': 'Customer Not Found!' }, 404)
+        if not user:
+            return make_response({'error': 'User Not Found!' }, 404)
 
         try: 
             r_json = request.get_json()
             for key in r_json:
-                setattr(customer, key, r_json[key])
+                setattr(user, key, r_json[key])
         
-            db.session.add(customer)
+            db.session.add(user)
             db.session.commit()
 
-            return make_response(customer.to_dict(), 200)
+            return make_response(user.to_dict(), 200)
         
         except ValueError as e:
             return make_response({'error': e.__str__()}, 400)
 
     #DELETE
     def delete(self, id):
-        customer = Customer.query.filter_by(id = id).first()
+        user = User.query.filter_by(id = id).first()
 
-        if not customer:
+        if not user:
             return make_response({'error': 'User Not Found!'}, 404)
 
-        [db.session.delete(reservation) for reservation in Reservation.query.filter(Reservation.customer_id == customer.id).all()]
+        [db.session.delete(reservation) for reservation in Reservation.query.filter(Reservation.user_id == user.id).all()]
 
-        db.session.delete(customer)
+        db.session.delete(user)
         db.session.commit()
 
         return make_response('', 204)
 
-api.add_resource(CustomerById, '/customers/<int:id>')
+api.add_resource(UserById, '/users/<int:id>')
 
 #/games
 class Shops(Resource):
@@ -176,14 +177,14 @@ class Reservations(Resource):
                 rating = r_json['rating'],
                 scheduled_time = r_json['scheduled_time'],
                 shop_id = r_json['shop_id'],
-                customer_id = r_json['customer_id']
+                user_id = r_json['user_id']
             )
 
-            customer = Customer.query.filter(Customer.id == new_reservation.user_id).first()
+            user = User.query.filter(User.id == new_reservation.user_id).first()
             shop = Shop.query.filter(Shop.id == new_reservation.shop_id).first()
 
-            if not customer or not shop:
-                return make_response({'error': 'Invalid Shop or Customer ID!'}, 400)
+            if not user or not shop:
+                return make_response({'error': 'Invalid Shop or User ID!'}, 400)
 
             db.session.add(new_reservation)
             db.session.commit()
@@ -239,7 +240,7 @@ class Workers(Resource):
 
 api.add_resource(Workers, '/workers')
 
-#/usergames/:id
+#/worker/:id
 class WorkerById(Resource):
 
     #GET
@@ -247,7 +248,7 @@ class WorkerById(Resource):
         worker = Worker.query.filter_by(id = id).first()
 
         if not worker:
-            return make_response({'error': 'Customer Not Found!'}, 404)
+            return make_response({'error': 'Worker Not Found!'}, 404)
 
         return make_response(worker.to_dict(), 200)
 
@@ -289,14 +290,14 @@ api.add_resource(WorkerById, '/workers/<int:id>')
 class Login(Resource):
     #not sure about this!!################################################################
     def post(self):
-        customer = Customer.query.filter_by(name=request.get_json()['name']).first()
+        user = User.query.filter_by(name=request.get_json()['name']).first()
         
-        if not customer:
+        if not user:
             return make_response({'error': 'Invalid Username/Password'}, 403)
 
-        session['customer_id'] = customer.id
+        session['user_id'] = user.id
         response = make_response(
-            customer.to_dict(),
+            user.to_dict(),
             200
         )
         return response
@@ -304,7 +305,7 @@ api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def delete(self):
-        session['customer_id'] = None
+        session['user_id'] = None
         response = make_response('',204)
         return response
 
@@ -312,10 +313,10 @@ api.add_resource(Logout, '/logout')
 
 class AuthorizedSession(Resource):
     def get(self):
-        customer= Customer.query.filter_by(id=session.get('customer_id')).first()
-        if customer:
+        user= User.query.filter_by(id=session.get('user_id')).first()
+        if user:
             response = make_response(
-                customer.to_dict(),
+                user.to_dict(),
                 200
             )
             return response

@@ -4,14 +4,14 @@ from datetime import datetime
 
 import random
 from app import app
-from models import db, Customer, Shop, Worker, Reservation
+from models import db, User, Shop, Worker, Reservation
 from faker import Faker
 
 if __name__ == '__main__':
     f = Faker()
     with app.app_context():
         print('Deleting Data...')
-        Customer.query.delete()
+        User.query.delete()
         Shop.query.delete()
         Worker.query.delete()
         Reservation.query.delete()
@@ -65,20 +65,20 @@ if __name__ == '__main__':
             )
             db.session.add(worker)
 
-        # Add Customers and Reservations
+        # Add Users and Reservations
         for i in range(1, 61):
-            customer = Customer(
+            user = User(
                 name = f.name(),
                 email = f.email(),
                 created_at = datetime(2023, 1, 1),
                 password = 'password',
                 phone_number = f.phone_number()
             )
-            db.session.add(customer)
+            db.session.add(user)
             db.session.commit()
 
             reservation = Reservation(
-                customer_id = i,
+                user_id = i,
                 shop_id = random.randint(1, 3),
                 scheduled_time = datetime(2023, 12, random.choice(range(1, 23)), random.choice(range(9, 17))),
                 created_at = datetime(2023, 1, 1)

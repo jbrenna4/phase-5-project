@@ -25,8 +25,8 @@ api = Api(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-class Customer(db.Model, SerializerMixin):
-    __tablename__ = 'customers'
+class User(db.Model, SerializerMixin):
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -36,9 +36,11 @@ class Customer(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    reservations = db.relationship('Reservation', backref='customer')
+    reservations = db.relationship('Reservation', backref='user')
 
-    serialize_rules = ('-reservations.customer', '-shops.customers')
+    serialize_rules = ('-reservations.user', '-shops.users')
+
+    shops = association_proxy('reservations', 'shop')
 
 
     @validates('name')
@@ -75,7 +77,9 @@ class Shop(db.Model, SerializerMixin):
     reservations = db.relationship('Reservation', backref='shop')
     workers = db.relationship('Worker', backref='shop')
 
-    serialize_rules = ('-reservations.shop', '-customers.shops')
+    serialize_rules = ('-reservations', '-users.shops', '-workers')
+
+    users = association_proxy('reservations', 'user')
 
     @validates('img')
     def validate_img(self, key, value):
@@ -138,9 +142,9 @@ class Reservation(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    serialize_rules =('-shop.customers', '-customer.shops', '-customer.reservations', '-shop.reservations')
+    serialize_rules =('-shop.users', '-user.shops', '-user.reservations', '-shop.reservations')
 
     # @validates('scheduled_time')
     # def validate_scheduled_time(self, key, scheduled_time):
@@ -155,4 +159,4 @@ class Reservation(db.Model, SerializerMixin):
 
 
     def __repr__(self):
-        return f'<shop location:{self.shop_id}, customer:{self.customer_id}, time:{self.scheduled_time}>'
+        return f'<shop location:{self.shop_id}, user:{self.user_id}, time:{self.scheduled_time}>'
