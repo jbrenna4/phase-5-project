@@ -7,6 +7,11 @@ from app import app
 from models import db, User, Shop, Worker, Reservation
 from faker import Faker
 
+
+userTemp = {
+    'bios': ['  ']
+}
+
 if __name__ == '__main__':
     f = Faker()
     with app.app_context():
@@ -43,14 +48,45 @@ if __name__ == '__main__':
         db.session.add(shop)
 
         # Add Workers
-        santas = ['Santa Claus', 'Kris Kringle', 'Father Christmas', 'Pere Noel', 'Ded Moroz', 'Babbo Natale']
-        for name in santas:
+        # santas = ['Santa Claus', 'Kris Kringle', 'Father Christmas', 'Pere Noel', 'Ded Moroz', 'Babbo Natale']
+        # for name in santas:
+        #     worker = Worker(
+        #         name = name,
+        #         role = 'santa',
+        #         shop_id = random.randint(1, 3),
+        #         created_at = datetime(2023, 1, 1),
+        #         phone_number = f.phone_number()
+        #     )
+        #     db.session.add(worker)
+
+        santa_bios = [
+        'Ho Ho Ho! I am Santa Claus, bringing joy and happiness to children all around the world since forever!',
+        'Hi there, I am Kris Kringle, also known as Santa Claus, Father Christmas or Saint Nicholas. Nice to meet you!',
+        'Oh, you think darkness is your ally. But you merely adopted the dark; I was born in it, moulded by it.',
+        'Bonjour! I am Pere Noel, the French version of Santa Claus. I love delivering presents to children on Christmas Eve!',
+        'Greetings! I am Ded Moroz, the Russian Santa Claus. I bring presents to children on New Year\'s Eve. Happy holidays!',
+        'Ciao! I am Babbo Natale, the Italian Santa Claus. I love Christmas time, when I can deliver presents to all the good children!'
+        ]
+
+        santa_pics = [
+        'https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81ITspNsIhL._CR0,0,1414,1414_UX256.jpg',
+        'https://s3-us-west-2.amazonaws.com/media.gigroster.com/images/000/003/355/original/SantaMarkKrisKringle_06.jpg?1456330577',
+        'https://img.theculturetrip.com/450x/smart/wp-content/uploads/2016/11/1103px-krampus_at_perchtenlauf_klagenfurt.jpg',
+        'https://cdn.shortpixel.ai/spai/q_lossy+ret_img+to_auto/https://www.annieandre.com/wp-content/uploads/2021/11/santa-claus-wine-champagne.jpg',
+        'https://previews.123rf.com/images/jessaerons/jessaerons1712/jessaerons171200071/92079274-russian-santa-claus.jpg',
+        'https://dreamdiscoveritalia.com/wp-content/uploads/2014/12/santa-claus-on-holiday.jpg'
+
+        ]
+        santas = ['Santa Claus', 'Kris Kringle', 'Krampus', 'Pere Noel', 'Ded Moroz', 'Babbo Natale']
+        for idx, name in enumerate(santas):
             worker = Worker(
                 name = name,
+                bio = santa_bios[idx],
                 role = 'santa',
                 shop_id = random.randint(1, 3),
                 created_at = datetime(2023, 1, 1),
-                phone_number = f.phone_number()
+                phone_number = f.phone_number(),
+                img = santa_pics[idx]
             )
             db.session.add(worker)
 

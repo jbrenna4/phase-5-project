@@ -77,7 +77,7 @@ class Shop(db.Model, SerializerMixin):
     reservations = db.relationship('Reservation', backref='shop')
     workers = db.relationship('Worker', backref='shop')
 
-    serialize_rules = ('-reservations', '-users.shops', '-workers')
+    serialize_rules = ('-reservations', '-users.shops', '-workers   ')
 
     users = association_proxy('reservations', 'user')
 
@@ -105,6 +105,8 @@ class Worker(db.Model, SerializerMixin):
     phone_number = db.Column(db.Integer)
     role = db.Column(db.String)
     day_rate = db.Column(db.Integer)
+    bio = db.Column(db.String, default = "They're a hard worker!")
+    img = db.Column(db.String, default = "https://cdn.iconscout.com/icon/premium/png-256-thumb/elf-2949257-2439290.png")
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.utcnow)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
