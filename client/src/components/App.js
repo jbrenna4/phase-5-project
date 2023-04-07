@@ -5,14 +5,15 @@ import NavBar from "./NavBar"
 import Header from "./Header"
 import Profile from "./Profile"
 import Community from "./Community"
-import GameStore from "./GameStore"
+import GameStore from "./ShopList"
 import GameLibrary from "./GameLibrary"
 import Authentication from "./Authentication"
+import ShopList from "./ShopList"
 
 export default function App(){
   const [user, setUser] = useState(null)
-  const [games, setGames] = useState([])
-  const [users, setUsers] = useState(null)
+  const [shops, setShops] = useState([])
+  const [workers, setWorkers] = useState([])
   const [searchGenre, setSearchGenre] = useState("")
   const [searchTitle, setSearchTitle] = useState("")
 
@@ -25,10 +26,17 @@ export default function App(){
   }, [])
 
   useEffect(() => {
-    fetch("/games")
+    fetch("/shops")
       .then(r => r.json())
       .then(data => {
-        setGames(data)})
+        setShops(data)})
+  }, [])
+
+  useEffect(() => {
+    fetch("/workers")
+      .then(r => r.json())
+      .then(data => {
+        setWorkers(data)})
   }, [])
 
   const fetchUser = () => {
@@ -59,8 +67,8 @@ export default function App(){
         <Route exact path="/">
           {useHistory().push('/store')}
         </Route>
-        <Route path="/store">
-          <GameStore games={games} searchGenre={searchGenre} onChangeGenre={setSearchGenre} searchTitle={searchTitle} onChangedTitle={setSearchTitle} user={user}/>
+        <Route path="/shop">
+          <ShopList shops={shops} searchGenre={searchGenre} onChangeGenre={setSearchGenre} searchTitle={searchTitle} onChangedTitle={setSearchTitle} user={user}/>
         </Route>
         {user ? <Route exact path="/library">
           <GameLibrary user={user}/>

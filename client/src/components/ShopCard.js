@@ -1,49 +1,51 @@
 import React, {useState} from "react"
 import {useHistory, useLocation} from "react-router-dom"
+import "./ShopCard.css"
 
-import ReviewCard from './ReviewCard'
 
-export default function GameStoreCard({game, user}){
-  const history = useHistory()
-  const location = useLocation()
+export default function ShopCard({shops}){
 
-  const [purchased, setPurchased] = useState(user ? user.user_games.find(usergame => usergame.game_id == game.id) : null)
+  // const history = useHistory()
+  // const location = useLocation()
+
+  // const [purchased, setPurchased] = useState(user ? user.user_games.find(usergame => usergame.game_id == game.id) : null)
   
-  const handleClick = () => history.push(`/store/${game.id}`)
+  // const handleClick = () => history.push(`/shop/${shop.id}`)
 
-  const handleSubmit = e => {
-    let form = e.target
-    fetch(`/reviews`, {
-      method: "POST",
-      headers: {
-          "Content-type": "application/json"
-      },
-      body: JSON.stringify({
-        rating: parseInt(form.rating.value),
-        description: form.review.value,
-        user_id: user.id,
-        game_id: game.id
-      })
-    })
-  }
+  // const handleSubmit = e => {
+  //   let form = e.target
+  //   fetch(`/reviews`, {
+  //     method: "POST",
+  //     headers: {
+  //         "Content-type": "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       rating: parseInt(form.rating.value),
+  //       description: form.review.value,
+  //       user_id: user.id,
+  //       game_id: game.id
+  //     })
+  //   })
+  // }
 
-  const userBuy = () => {
-    fetch('/usergames', {
-      method: "POST",
-      headers: {
-          "Content-Type":"application/json"                    
-      },
-      body: JSON.stringify({
-        user_id: user.id,
-        game_id: game.id
-      })
-    })
-    .then(setPurchased(true))
-  }
+  // const userBuy = () => {
+  //   fetch('/usergames', {
+  //     method: "POST",
+  //     headers: {
+  //         "Content-Type":"application/json"                    
+  //     },
+  //     body: JSON.stringify({
+  //       user_id: user.id,
+  //       game_id: game.id
+  //     })
+  //   })
+  //   .then(setPurchased(true))
+  // }
 
   return(
-    <div className="gameDiv" onClick={handleClick}>
-      {game ? <>
+    <div className="shopDiv" onClick={handleClick}>
+      <p>this is where th shops go</p>
+      {/* {game ? <>
         <ul className="card">
           <img src={game.img} alt={game.title}/>
           <h1 className="store_label">{game.title}</h1>
@@ -72,7 +74,7 @@ export default function GameStoreCard({game, user}){
           </>}</> : null}
           <ul className="review">{game.game_reviews.map(review => <ReviewCard review={review}/>)}</ul>
         </>: null}
-      </>: null}
+      </>: null} */}
     </div>
   )
 }

@@ -1,9 +1,10 @@
 import React from "react"
 import {useLocation} from 'react-router-dom'
+import "./ShopList.css"
 
-import GameStoreCard from "./GameStoreCard"
+import ShopCard from "./ShopCard"
 
-export default function GameStore({games, searchGenre, onChangeGenre, onChangedTitle, searchTitle, user}){
+export default function ShopList({games, searchGenre, onChangeGenre, onChangedTitle, searchTitle, user}){
 
   const location = useLocation()
 
@@ -47,6 +48,6 @@ export default function GameStore({games, searchGenre, onChangeGenre, onChangedT
           <ul className="cards">{games.filter(game => game.genre.toLowerCase().includes(searchGenre.toLowerCase()) && game.title.toLowerCase().includes(searchTitle.toLowerCase())).map(game => <GameStoreCard game={game} user={user}/>)}</ul>
         </>
       </div> :
-    <GameStoreCard game={games.find(game => game.id == location.pathname[7])} user={user}/>}</>
+    <ShopCard shops={shops} user={user}/>}</>
   )
 }
