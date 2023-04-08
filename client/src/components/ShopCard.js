@@ -3,78 +3,21 @@ import {useHistory, useLocation} from "react-router-dom"
 import "./ShopCard.css"
 
 
-export default function ShopCard({shops}){
+export default function ShopCard({id, neighborhood, img, address}){
 
-  // const history = useHistory()
-  // const location = useLocation()
-
-  // const [purchased, setPurchased] = useState(user ? user.user_games.find(usergame => usergame.game_id == game.id) : null)
-  
-  // const handleClick = () => history.push(`/shop/${shop.id}`)
-
-  // const handleSubmit = e => {
-  //   let form = e.target
-  //   fetch(`/reviews`, {
-  //     method: "POST",
-  //     headers: {
-  //         "Content-type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       rating: parseInt(form.rating.value),
-  //       description: form.review.value,
-  //       user_id: user.id,
-  //       game_id: game.id
-  //     })
-  //   })
-  // }
-
-  // const userBuy = () => {
-  //   fetch('/usergames', {
-  //     method: "POST",
-  //     headers: {
-  //         "Content-Type":"application/json"                    
-  //     },
-  //     body: JSON.stringify({
-  //       user_id: user.id,
-  //       game_id: game.id
-  //     })
-  //   })
-  //   .then(setPurchased(true))
-  // }
-
-  return(
-    <div className="shopDiv" onClick={handleClick}>
-      <p>this is where th shops go</p>
-      {/* {game ? <>
-        <ul className="card">
-          <img src={game.img} alt={game.title}/>
-          <h1 className="store_label">{game.title}</h1>
-          <p className="store_label">{game.price === 0 ? 'Free' : '$' + game.price}</p>
-          <p className="store_label">{game.genre}</p>
-          {location.pathname.length > 7 ?
-          <>
-            <p>{game.studio}</p>
-            <p>{game.description}</p>
-            {user ? purchased ? null : <button class="dropbtn" onClick={userBuy}>BUY</button> : null}
-          </>
-          : null}
-        </ul>
-        {location.pathname.length > 7 ? <>
-          {user ? <>{game.game_reviews.find(review => review.user_id == user.id) || !user.user_games.find(usergame => usergame.game_id == game.id)? null : <>
-            <div className='userForm'>
-            <form onSubmit={handleSubmit} className="form">
-              <h1>Write A Review!</h1>
-              <label for='rating'>Rating:</label>
-              <input type="number" min='1' max='10' name='rating'/>
-              <label for='review'>Review:</label>
-              <input type="text" name='review'/>
-              <button type="submit">Submit</button> 
-            </form>
-          </div> 
-          </>}</> : null}
-          <ul className="review">{game.game_reviews.map(review => <ReviewCard review={review}/>)}</ul>
-        </>: null}
-      </>: null} */}
+  return (
+    <div className="shopDiv">
+    <li className="shop_card">
+      <h3 className='shop_name'>{neighborhood}</h3>
+      <img 
+      src={img} 
+      alt={neighborhood}
+      //onClick = {handleClick} 
+      />
+      <p className="address_label">Address: {address}</p>
+      <p className="address_label">Phone Number: 555-555-5555</p>
+      <p className="address_label">Hours: 7 days a week, 9:00 AM - 7:00 PM</p>
+    </li>
     </div>
-  )
+  );
 }

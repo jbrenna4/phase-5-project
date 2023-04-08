@@ -5,8 +5,19 @@ import SantaCard from "./SantaCard"
 
 export default function SantaList({workers}){
 
-    return(
-        <p>SantaList</p>
-        )
-}
-
+    const santaWorkers = workers.filter((worker) => worker.role === "santa");
+    const cards = santaWorkers.map((worker) => (
+        <SantaCard
+          key = {worker.id}
+          id = {worker.id}
+          name = {worker.name}
+          img = {worker.img}
+          bio = {worker.bio}
+          role = {worker.role}
+        />
+      ))
+    
+      return (
+        <ul className="santa_cards">{cards}</ul>
+      );
+    }
