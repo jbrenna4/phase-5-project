@@ -3,17 +3,17 @@ import {Route, Switch, useHistory} from "react-router-dom"
 
 import NavBar from "./NavBar"
 import Header from "./Header"
-import Profile from "./Profile"
-import Community from "./Community"
-import GameStore from "./ShopList"
-import GameLibrary from "./GameLibrary"
 import Authentication from "./Authentication"
 import ShopList from "./ShopList"
+import SantaList from "./SantaList"
+import Reservation from "./Reservation"
+import Homepage from "./Homepage"
 
 export default function App(){
   const [user, setUser] = useState(null)
   const [shops, setShops] = useState([])
   const [workers, setWorkers] = useState([])
+  const [reservations, setReservations] = useState([])
   const [searchGenre, setSearchGenre] = useState("")
   const [searchTitle, setSearchTitle] = useState("")
 
@@ -37,6 +37,13 @@ export default function App(){
       .then(r => r.json())
       .then(data => {
         setWorkers(data)})
+  }, [])
+
+  useEffect(() => {
+    fetch("/reservations")
+      .then(r => r.json())
+      .then(data => {
+        setReservations(data)})
   }, [])
 
   const fetchUser = () => {
@@ -65,23 +72,20 @@ export default function App(){
       <NavBar user={user}/>
       <Switch>
         <Route exact path="/">
-          {useHistory().push('/store')}
+          <Homepage/>
         </Route>
         <Route path="/shop">
           <ShopList shops={shops} searchGenre={searchGenre} onChangeGenre={setSearchGenre} searchTitle={searchTitle} onChangedTitle={setSearchTitle} user={user}/>
         </Route>
-        {user ? <Route exact path="/library">
-          <GameLibrary user={user}/>
-        </Route> : null}
-        <Route path="/community">
-          {users ? <Community users = {users}/> : null}
+        <Route path="/reservation" reservations = {reservations} updateReservations = {setReservations}>
+          <Reservation/>
         </Route>
         <Route exact path="/login">
           <Authentication updateUser={updateUser} updateUsers={updateUsers}/>
         </Route>
-        {user ? <Route exact path="/profile">
-          <Profile user={user} updateUsers={updateUsers}/>
-        </Route> : null}
+        <Route exact path="/santas">
+          <SantaList workers = {workers} updateWorkers = {setWorkers}/>
+        </Route>
         <Route path="*">
             <h1>404 not found</h1>
         </Route> 

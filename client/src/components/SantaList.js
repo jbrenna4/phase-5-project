@@ -3,7 +3,7 @@ import {useHistory, useLocation} from "react-router-dom"
 import "./SantaList.css"
 import SantaCard from "./SantaCard"
 
-export default function Reservation({}){
+export default function SantaList({workers}){
 
     return(
         <p>SantaList</p>
