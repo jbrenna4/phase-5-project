@@ -75,9 +75,9 @@ export default function App(){
           <Homepage/>
         </Route>
         <Route path="/shop">
-          <ShopList shops={shops} searchGenre={searchGenre} onChangeGenre={setSearchGenre} searchTitle={searchTitle} onChangedTitle={setSearchTitle} user={user}/>
+          <ShopList shops={shops} user={user}/>
         </Route>
-        <Route path="/reservation" reservations = {reservations} updateReservations = {setReservations}>
+        <Route path="/reservation" reservations = {reservations} updateReservations = {setReservations} user ={user}>
           <Reservation/>
         </Route>
         <Route exact path="/login">

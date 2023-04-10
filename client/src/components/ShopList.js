@@ -4,13 +4,8 @@ import "./ShopList.css"
 
 import ShopCard from "./ShopCard"
 
-export default function ShopList({shops, searchGenre, onChangeGenre, onChangedTitle, searchTitle, user}){
+export default function ShopList({shops}){
 
-  const location = useLocation()
-
-  const handleChangeGenre = event => onChangeGenre(event.target.value)
-
-  const handleChangeTitle = event => onChangedTitle(event.target.value)
 
     const cards = shops.map((shop) => (
       <ShopCard

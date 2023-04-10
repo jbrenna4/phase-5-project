@@ -197,6 +197,35 @@ api.add_resource(Reservations, '/reservations')
 
 #/reviews/:id
 class ReservationById(Resource):
+
+        #GET
+    def get(self, id):
+        reservation = Reservation.query.filter_by(id = id).first()
+
+        if not reservation:
+            return make_response({'error': 'Reservation Not Found!'}, 404)
+
+        return make_response(reservation.to_dict(), 200)
+
+    #PATCH
+    def patch(self, id):
+        reservation = Reservation.query.filter_by(id = id).first()
+
+        if not reservation:
+            return make_response({ 'error': 'reservation Not Found!'}, 404)
+
+        try:
+            r_json = request.get_json()
+            for key in r_json:
+                setattr(reservation, key, r_json[key])
+        
+            db.session.add(reservation)
+            db.session.commit()
+
+            return make_response(reservation.to_dict(), 200)
+        except ValueError as e:
+            return make_response({'error': e.__str__()}, 400)
+
     #DELETE
     def delete(self, id):
         reservation = Reservation.query.filter_by(id = id).first()

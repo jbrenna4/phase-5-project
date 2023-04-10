@@ -6,13 +6,17 @@ export default function NavBar({user}){
     <nav className="topnav">
       <ul>
         <li>
-          <NavLink to="/store">Store</NavLink>
+          <NavLink to="/">Homepage</NavLink>
         </li>
-        {user ? <li><NavLink to="/library">Library</NavLink></li> : null}
         <li>
-          <NavLink to="/community">Community</NavLink>
+          <NavLink to="/shop">Shops</NavLink>
         </li>
-        {user ? <li> <NavLink to="/profile">Profile</NavLink> </li> : null}
+        <li>
+          <NavLink to="/santas">Santas</NavLink>
+        </li>
+        <li>
+          <NavLink to="/reservation">Reservations</NavLink>
+        </li>
       </ul>
     </nav>
   )
