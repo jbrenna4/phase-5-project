@@ -5,8 +5,10 @@ import ReservationForm from "./ReservationForm"
 import ReservationCard from "./ReservationCard"
 
 export default function Reservation({reservations, user}){
+console.log(user)
 
-    if (user && user.reservation){
+
+    if (user && user.reservations && user.reservations.length > 0){
         return(
             <ReservationCard user={user}/>
         )

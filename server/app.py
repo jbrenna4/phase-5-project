@@ -93,7 +93,7 @@ class UserById(Resource):
 
 api.add_resource(UserById, '/users/<int:id>')
 
-#/games
+#/shops
 class Shops(Resource):
     #GET
     def get(self):
@@ -121,7 +121,7 @@ class Shops(Resource):
 
 api.add_resource(Shops, '/shops')
 
-#/games/:id
+#/shops/:id
 class ShopById(Resource):
     #GET
     def get(self, id):
@@ -162,7 +162,7 @@ class ShopById(Resource):
 
 api.add_resource(ShopById, '/shops/<int:id>')
 
-#/reviews
+#/reservation
 class Reservations(Resource):
 
     #GET
@@ -195,7 +195,7 @@ class Reservations(Resource):
 
 api.add_resource(Reservations, '/reservations')
 
-#/reviews/:id
+#/reservations/:id
 class ReservationById(Resource):
 
         #GET
@@ -240,7 +240,7 @@ class ReservationById(Resource):
 
 api.add_resource(ReservationById, '/reservations/<int:id>')
 
-#/usergames
+#/workers
 class Workers(Resource):
 
     #GET

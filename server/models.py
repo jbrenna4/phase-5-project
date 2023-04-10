@@ -77,7 +77,7 @@ class Shop(db.Model, SerializerMixin):
     reservations = db.relationship('Reservation', backref='shop')
     workers = db.relationship('Worker', backref='shop')
 
-    serialize_rules = ('-reservations', '-users.shops', '-workers   ')
+    serialize_rules = ('-reservations', '-users.shops', '-workers')
 
     users = association_proxy('reservations', 'user')
 

@@ -19,13 +19,13 @@ export default function Header({updateUser, user}) {
   return(
     <header className="header">
       <ul>
-        <h2 className="logo_text">Stream</h2>
-        <img src="https://cdn.freebiesupply.com/images/large/2x/steam-logo-transparent.png" alt="Smoke" class="logo"></img>
-        <div class="dropdown">
-          <button onClick={user ? handleLogout : null} class="dropbtn">
+        <h2 className="logo_text">Santa</h2>
+        <img src="https://static.vecteezy.com/system/resources/previews/008/604/918/original/cartoon-santa-claus-carrying-sack-free-vector.jpg" alt="Santa" className="logo"></img>
+        <div className="dropdown">
+          <button onClick={user ? handleLogout : null} className="dropbtn">
           <NavLink to="/login">{user ? 'Logout' : 'Login'}</NavLink>
             {user ? <>
-              <img src={user.img} className="header__image"></img>
+              {/* <img src={user.img} className="header__image"></img> */}
               <p>{user.name}</p>
             </> : null}
           </button>

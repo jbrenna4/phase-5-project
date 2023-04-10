@@ -14,16 +14,12 @@ export default function App(){
   const [shops, setShops] = useState([])
   const [workers, setWorkers] = useState([])
   const [reservations, setReservations] = useState([])
-  const [searchGenre, setSearchGenre] = useState("")
-  const [searchTitle, setSearchTitle] = useState("")
 
   useEffect(() => {
     fetchUser()
   },[])
 
-  useEffect(() => {
-    updateUsers()
-  }, [])
+
 
   useEffect(() => {
     fetch("/shops")
@@ -31,6 +27,7 @@ export default function App(){
       .then(data => {
         setShops(data)})
   }, [])
+
 
   useEffect(() => {
     fetch("/workers")
@@ -50,46 +47,48 @@ export default function App(){
     fetch('/authorized')
     .then (r => {
       if (r.ok){
-        r.json().then(user => setUser (user))
-      }else{
-        setUser(null)
+        r.json().then(user => setUser(user))
       }
     })
   }
 
-  const updateUsers = () => {
-    fetch("/users", )
-    .then(r => r.json())
-    .then(data => {
-      setUsers(data)})
-  }
+  // const updateUsers = () => {
+  //   fetch("/users", )
+  //   .then(r => r.json())
+  //   .then(data => {
+  //     setUser(data)})
+  // }
 
   const updateUser = user => setUser(user)
 
-  return(
-    <main className="app">
-      <Header updateUser={updateUser} user={user}/>
-      <NavBar user={user}/>
-      <Switch>
-        <Route exact path="/">
-          <Homepage/>
-        </Route>
-        <Route path="/shop">
-          <ShopList shops={shops} user={user}/>
-        </Route>
-        <Route path="/reservation" reservations = {reservations} updateReservations = {setReservations} user ={user}>
-          <Reservation/>
-        </Route>
-        <Route exact path="/login">
-          <Authentication updateUser={updateUser} updateUsers={updateUsers}/>
-        </Route>
-        <Route exact path="/santas">
-          <SantaList workers = {workers} updateWorkers = {setWorkers}/>
-        </Route>
-        <Route path="*">
-            <h1>404 not found</h1>
-        </Route> 
-      </Switch>
-    </main>
-  )
+{
+
+    return(
+      <main className="app">
+        <Header updateUser={updateUser} user={user}/>
+        <NavBar user={user}/>
+        <Switch>
+          <Route exact path="/">
+            <Homepage/>
+          </Route>
+          <Route path="/shop">
+            <ShopList shops={shops} user={user}/>
+          </Route>
+          <Route path="/reservation">
+            <Reservation reservations = {reservations} updateReservations = {setReservations} user ={user}/>
+          </Route>
+          <Route exact path="/login">
+            <Authentication updateUser={updateUser}/>
+          </Route>
+          <Route exact path="/santas">
+            <SantaList workers = {workers} updateWorkers = {setWorkers}/>
+          </Route>
+          <Route path="*">
+              <h1>404 not found</h1>
+          </Route> 
+        </Switch>
+      </main>
+    )
+  }
+
 }

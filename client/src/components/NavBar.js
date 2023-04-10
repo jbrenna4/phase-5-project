@@ -1,7 +1,16 @@
 import React from "react"
 import {NavLink} from "react-router-dom"
 
+
+
 export default function NavBar({user}){
+  // function handleLogoutClick() {
+  //   fetch("/logout", { method: "DELETE" }).then((r) => {
+  //     if (r.ok) {
+  //       setUser(null);
+  //     }
+  //   });
+  // }
   return(
     <nav className="topnav">
       <ul>
@@ -17,6 +26,9 @@ export default function NavBar({user}){
         <li>
           <NavLink to="/reservation">Reservations</NavLink>
         </li>
+        {/* <Button variant="outline" onClick={handleLogoutClick}>
+          Logout
+        </Button> */}
       </ul>
     </nav>
   )

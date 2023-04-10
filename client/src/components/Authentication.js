@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useFormik } from "formik"
 import * as yup from "yup"
 
-export default function Authentication({updateUser, updateUsers}) {
+export default function Authentication({updateUser}) {
     const [signUp, setSignUp] = useState(false)
     const history = useHistory()
 
@@ -35,7 +35,6 @@ export default function Authentication({updateUser, updateUsers}) {
             })
             .then(r => r.json())
             .then(user => {
-                updateUsers(user)
                 updateUser(user)
                 history.push('/login')
             })
@@ -57,7 +56,7 @@ export default function Authentication({updateUser, updateUsers}) {
 
         }
     })
- 
+
   return (
     <> 
       {Object.values(formik.errors).map(error => <h2 style={{color:'red'}}> {error}</h2>)}
