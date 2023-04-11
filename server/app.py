@@ -174,7 +174,6 @@ class Reservations(Resource):
         try:
             r_json = request.get_json()
             new_reservation = Reservation(
-                rating = r_json['rating'],
                 scheduled_time = r_json['scheduled_time'],
                 shop_id = r_json['shop_id'],
                 user_id = r_json['user_id']
@@ -190,6 +189,7 @@ class Reservations(Resource):
             db.session.commit()
 
             return make_response(jsonify(new_reservation.to_dict()), 201)
+        
         except ValueError as e:
             return make_response({'error': e.__str__()}, 400)
 

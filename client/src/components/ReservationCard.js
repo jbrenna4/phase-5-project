@@ -5,34 +5,42 @@ import "./ReservationCard.css"
 
 export default function ReservationCard({user}){
 
+const history = useHistory();
+
 const handleDelete = async () => {
     try {
-        const response = await fetch(`/api/reservations/${user.reservations.id}`, {
+    const response = await fetch(`/api/reservations/${user.reservations[0].id}`, {
         method: "DELETE",
-        });
-        if (!response.ok) {
+    });
+    if (!response.ok) {
         throw new Error("Failed to delete reservation");
-        }
-        //onDelete(); probaby to update the dom...local update
-    } catch (error) {
-        console.error(error);
     }
-    };
+    history.push("/"); // redirect to the homepage after deleting
+    } catch (error) {
+    console.error(error);
+    }
+};
 
 const handleEdit = async () => {
+    const newScheduledTime = prompt("Enter new appointment time (YYYY-MM-DD HH:mm:ss):");
     try {
-        const response = await fetch(`/api/reservations/${user.reservations.id}`, {
-        method: "Patch",
-        });
-        if (!response.ok) {
-        throw new Error("Failed to patch reservation");
-        }
-        //onDelete(); probaby to update the dom...local update
-    } catch (error) {
-        console.error(error);
+    const response = await fetch(`/api/reservations/${user.reservations[0].id}`, {
+        method: "PATCH",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ scheduled_time: newScheduledTime }),
+    });
+    if (!response.ok) {
+        throw new Error("Failed to update reservation");
     }
-    };
-
+    const updatedReservation = await response.json();
+    console.log("Reservation updated:", updatedReservation);
+    history.push("/"); // redirect to the homepage after updating
+    } catch (error) {
+    console.error(error);
+    }
+};
 
 const scheduledTime = user.reservations[0].scheduled_time;
 const date = new Date(scheduledTime);
@@ -46,7 +54,7 @@ const formattedScheduledTime = `${formattedDate} ${formattedTime}`;
             <p>Your reservation is at our {user.reservations[0].shop.neighborhood} location</p>
             <p>at {formattedScheduledTime}</p>
             <button onClick={handleDelete}>Delete</button>
-            <button onClick={handleDelete}>Edit</button>
+            <button onClick={handleEdit}>Edit</button>
         </div>
 
         )

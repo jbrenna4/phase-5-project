@@ -4,7 +4,7 @@ import "./Reservation.css"
 import ReservationForm from "./ReservationForm"
 import ReservationCard from "./ReservationCard"
 
-export default function Reservation({reservations, user}){
+export default function Reservation({reservations, user, updateReservations}){
 console.log(user)
 
 
@@ -14,7 +14,7 @@ console.log(user)
         )
     } else {
         return(    
-        <ReservationForm/>
+        <ReservationForm user = {user} updateReservations = {updateReservations}/>
         )        
     }
 }
