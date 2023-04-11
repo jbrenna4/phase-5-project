@@ -146,7 +146,7 @@ class Reservation(db.Model, SerializerMixin):
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    serialize_rules =('-shop.users', '-user.shops', '-user.reservations', '-shop.reservations')
+    serialize_rules =('-user', '-shop')
 
     # @validates('scheduled_time')
     # def validate_scheduled_time(self, key, scheduled_time):

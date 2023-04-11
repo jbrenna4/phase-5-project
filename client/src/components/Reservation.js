@@ -1,10 +1,13 @@
-import React, {useReducer, useState} from "react"
+import React, {useReducer, useState, useContext} from "react"
 import {useHistory, useLocation} from "react-router-dom"
 import "./Reservation.css"
 import ReservationForm from "./ReservationForm"
 import ReservationCard from "./ReservationCard"
+import {UserContext} from "./App"
 
-export default function Reservation({reservations, user, updateReservations}){
+export default function Reservation({reservations, updateReservations}){
+
+const [user] = useContext(UserContext)   
 console.log(user)
 
 

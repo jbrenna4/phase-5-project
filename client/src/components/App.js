@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState, createContext} from "react"
 import {Route, Switch, useHistory} from "react-router-dom"
 
 import NavBar from "./NavBar"
@@ -9,11 +9,14 @@ import SantaList from "./SantaList"
 import Reservation from "./Reservation"
 import Homepage from "./Homepage"
 
+export const UserContext = createContext()
+
 export default function App(){
   const [user, setUser] = useState(null)
   const [shops, setShops] = useState([])
   const [workers, setWorkers] = useState([])
   const [reservations, setReservations] = useState([])
+
 
   useEffect(() => {
     fetchUser()
@@ -61,10 +64,9 @@ export default function App(){
 
   const updateUser = user => setUser(user)
 
-{
-
     return(
       <main className="app">
+        <UserContext.Provider value = {[user]}>
         <Header updateUser={updateUser} user={user}/>
         <NavBar user={user}/>
         <Switch>
@@ -87,8 +89,7 @@ export default function App(){
               <h1>404 not found</h1>
           </Route> 
         </Switch>
+        </UserContext.Provider>
       </main>
     )
   }
-
-}

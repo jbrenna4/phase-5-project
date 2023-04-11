@@ -9,7 +9,7 @@ const history = useHistory();
 
 const handleDelete = async () => {
     try {
-    const response = await fetch(`/api/reservations/${user.reservations[0].id}`, {
+    const response = await fetch(`/reservations/${user.reservations[0].id}`, {
         method: "DELETE",
     });
     if (!response.ok) {
@@ -24,7 +24,7 @@ const handleDelete = async () => {
 const handleEdit = async () => {
     const newScheduledTime = prompt("Enter new appointment time (YYYY-MM-DD HH:mm:ss):");
     try {
-    const response = await fetch(`/api/reservations/${user.reservations[0].id}`, {
+    const response = await fetch(`/reservations/${user.reservations[0].id}`, {
         method: "PATCH",
         headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ const formattedScheduledTime = `${formattedDate} ${formattedTime}`;
         <div>
             <h2>Prepare to meet Santa!</h2>
             <img src = "https://assets.rockettes.com/wp-content/uploads/2019/11/RCCS_SantaKids_Horizontal_1.jpg.jpeg"/>
-            <p>Your reservation is at our {user.reservations[0].shop.neighborhood} location</p>
+            <p>Your reservation is at our {user.reservations[0].shop_id} location</p>
             <p>at {formattedScheduledTime}</p>
             <button onClick={handleDelete}>Delete</button>
             <button onClick={handleEdit}>Edit</button>

@@ -10,7 +10,8 @@ const history = useHistory();
 
 const handleSubmit = (event) => {
     event.preventDefault();
-    const reservation = { scheduled_time, shop_id, user_id: user.id };
+    const reservation = { scheduled_time: scheduled_time, shop_id: shop_id, user_id: user.id };
+    console.log(reservation)
 
     fetch("/reservations", {
     method: "POST",
@@ -21,6 +22,7 @@ const handleSubmit = (event) => {
     })
     .then((response) => response.json())
     .then((data) => {
+        console.log(reservation)
         console.log("Success:", data);
         updateReservations();
         history.push(`/reservations/${data.id}`);

@@ -1,4 +1,5 @@
 from flask import Flask, make_response, request, jsonify, abort, session
+from datetime import datetime
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
@@ -171,10 +172,16 @@ class Reservations(Resource):
 
     #POST
     def post(self):
+
+        print(request.get_json()["user_id"])
+        time = request.get_json()['scheduled_time']
+        print(time)
+        dt = datetime.strptime(time, '%Y-%m-%dT%H:%M')
         try:
             r_json = request.get_json()
+            print(r_json)   
             new_reservation = Reservation(
-                scheduled_time = r_json['scheduled_time'],
+                scheduled_time = dt,
                 shop_id = r_json['shop_id'],
                 user_id = r_json['user_id']
             )
@@ -191,6 +198,7 @@ class Reservations(Resource):
             return make_response(jsonify(new_reservation.to_dict()), 201)
         
         except ValueError as e:
+            print(e.__str__())
             return make_response({'error': e.__str__()}, 400)
 
 api.add_resource(Reservations, '/reservations')
@@ -200,7 +208,7 @@ class ReservationById(Resource):
 
         #GET
     def get(self, id):
-        reservation = Reservation.query.filter_by(id = id).first()
+        reservation = Reservation.query.filter_by(id=id).first()
 
         if not reservation:
             return make_response({'error': 'Reservation Not Found!'}, 404)
@@ -210,12 +218,18 @@ class ReservationById(Resource):
     #PATCH
     def patch(self, id):
         reservation = Reservation.query.filter_by(id = id).first()
+        time = request.get_json()['scheduled_time']
+        print(time)
+        dt = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
 
         if not reservation:
             return make_response({ 'error': 'reservation Not Found!'}, 404)
 
         try:
+
             r_json = request.get_json()
+            r_json.update({"scheduled_time":dt})
+            
             for key in r_json:
                 setattr(reservation, key, r_json[key])
         
