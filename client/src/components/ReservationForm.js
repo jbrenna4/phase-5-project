@@ -52,7 +52,6 @@ return (
         <option value="1">Park Slope</option>
         <option value="2">Crown Heights</option>
         <option value="3">Bay Ridge</option>
-        {/* Add more options for each shop */}
     </select>
     <button type="submit">Create Reservation</button>
     </form>
