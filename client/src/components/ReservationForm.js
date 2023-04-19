@@ -25,7 +25,7 @@ const handleSubmit = (event) => {
         console.log(reservation)
         console.log("Success:", data);
         updateReservations();
-        history.push(`/reservations/${data.id}`);
+        history.push(`/`);
     })
     // .catch((error) => {
     //     console.error("Error:", error);

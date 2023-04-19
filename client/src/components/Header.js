@@ -11,7 +11,7 @@ export default function Header({updateUser, user}) {
     .then(r => {
       if(r.ok){
         updateUser(null)
-        history.push('/store')
+        history.push('/')
       }
     })
   }

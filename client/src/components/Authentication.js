@@ -50,7 +50,7 @@ export default function Authentication({updateUser}) {
             .then(r => r.json())
             .then(user => {
                 updateUser(user)
-                history.push('/store')
+                history.push('/')
             })
           }
 
