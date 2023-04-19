@@ -1,0 +1,23 @@
+.homepage {
+background-color: #f5f5f5; /* Light gray background */
+padding: 50px; /* Add some padding around the content */
+text-align: center; /* Center align the content */
+}
+
+.homepage_header {
+font-size: 48px; /* Increase the font size */
+color: #c62828; /* Red color for Christmas theme */
+margin-top: 0; /* Remove default margin */
+}
+
+.homepage_image {
+width: 50%; /* Reduce the image size */
+border-radius: 50%; /* Make the image round */
+box-shadow: 0px 5px 10px #888; /* Add a subtle shadow effect */
+}
+
+.homepage_text {
+font-size: 24px; /* Increase the font size */
+color: #333; /* Dark gray color */
+margin-top: 30px; /* Add some space between the image and text */
+}
