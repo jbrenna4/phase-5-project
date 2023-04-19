@@ -3,7 +3,7 @@ import {useHistory, useLocation} from "react-router-dom"
 import "./ReservationCard.css"
 
 
-export default function ReservationCard({user}){
+export default function ReservationCard({user, setRefresh}){
 
 const history = useHistory();
 
@@ -16,6 +16,7 @@ const handleDelete = async () => {
         throw new Error("Failed to delete reservation");
     }
     history.push("/"); // redirect to the homepage after deleting
+    setRefresh(prev => !prev);
     } catch (error) {
     console.error(error);
     }
@@ -36,6 +37,7 @@ const handleEdit = async () => {
     }
     const updatedReservation = await response.json();
     console.log("Reservation updated:", updatedReservation);
+    setRefresh(prev => !prev);
     history.push("/"); // redirect to the homepage after updating
     } catch (error) {
     console.error(error);

@@ -5,7 +5,7 @@ import ReservationForm from "./ReservationForm"
 import ReservationCard from "./ReservationCard"
 import {UserContext} from "./App"
 
-export default function Reservation({reservations, updateReservations}){
+export default function Reservation({reservations, updateReservations, setRefresh}){
 
 const [user] = useContext(UserContext)   
 console.log(user)
@@ -13,11 +13,11 @@ console.log(user)
 
     if (user && user.reservations && user.reservations.length > 0){
         return(
-            <ReservationCard user={user}/>
+            <ReservationCard user={user} setRefresh ={setRefresh}/>
         )
     } else {
         return(    
-        <ReservationForm user = {user} updateReservations = {updateReservations}/>
+        <ReservationForm user = {user} updateReservations = {updateReservations} setRefresh ={setRefresh}/>
         )        
     }
 }

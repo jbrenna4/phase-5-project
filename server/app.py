@@ -171,7 +171,7 @@ class Reservations(Resource):
         return make_response(jsonify([reservation.to_dict() for reservation in Reservation.query.all()]), 200)
 
     #POST
-    def post(self):
+    def post(self): 
 
         print(request.get_json()["user_id"])
         time = request.get_json()['scheduled_time']

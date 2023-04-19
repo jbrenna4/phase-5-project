@@ -3,7 +3,7 @@ import {useHistory, useLocation} from "react-router-dom"
 import "./ReservationForm.css"
 
 
-export default function ReservationForm({user, updateReservations}){
+export default function ReservationForm({user, updateReservations, setRefresh}){
 const [scheduled_time, setScheduledTime] = useState(new Date());
 const [shop_id, setShopId] = useState("");
 const history = useHistory();
@@ -25,6 +25,7 @@ const handleSubmit = (event) => {
         console.log(reservation)
         console.log("Success:", data);
         updateReservations();
+        setRefresh(prev => !prev);
         history.push(`/`);
     })
     // .catch((error) => {

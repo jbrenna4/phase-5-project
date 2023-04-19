@@ -15,12 +15,13 @@ export default function App(){
   const [user, setUser] = useState(null)
   const [shops, setShops] = useState([])
   const [workers, setWorkers] = useState([])
-  const [reservations, setReservations] = useState([])
+  const [reservations, setReservations] = useState([])  
+  const [refresh, setRefresh] = useState(false);
 
 
   useEffect(() => {
     fetchUser()
-  },[])
+  },[, refresh])
 
 
 
@@ -77,7 +78,7 @@ export default function App(){
             <ShopList shops={shops} user={user}/>
           </Route>
           <Route path="/reservation">
-            <Reservation reservations = {reservations} updateReservations = {setReservations} user ={user}/>
+            <Reservation reservations = {reservations} updateReservations = {setReservations} user ={user} setRefresh ={setRefresh}/>
           </Route>
           <Route exact path="/login">
             <Authentication updateUser={updateUser}/>
